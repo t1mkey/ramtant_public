@@ -1,0 +1,225 @@
+{% extends "ui.html" %}
+
+{% block title %}ramtant - {{ post.title }}{% endblock %}
+
+{% block headp %}
+    {% if user.is_authenticated == False %}
+        <meta http-equiv="refresh" content="0;URL=/"/>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="post-container">
+        <h1 class="post-title">{{ post.title }}</h1>
+        <p class="post-content">{{ post.content }}</p>
+
+        {% if post.img %}
+            <div class="post-image">
+                <img src="{{ post.img.url }}" alt="{{ post.title }}"/>
+            </div>
+        {% endif %}
+
+        <p class="post-meta">
+            <a href="{% url 'profile' username=post.author.user.username %}" class="author-link">{{ post.author }}</a> |
+            {{ post.created_at }}
+            {% if post.author.user == user %}
+                | <a href="{% url 'post_edit' post_id=post.id %}" class="action-link">изменить</a>
+                | <a href="{% url 'post_delete' post_id=post.id %}" class="action-link">удалить</a>
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="comments-container">
+        <h3 class="comments-title">Комментарии</h3>
+
+        <ul class="comments-list">
+            {% for comment in comments %}
+                <li class="comment-item">
+                    <div class="comment-content">
+                        <a href="{% url 'profile' username=comment.author.user.username %}" class="comment-author">{{ comment.author.user.username }}</a>:
+                        <p class="comment-text">{{ comment.content }}</p>
+                        <small class="comment-meta">Дата: {{ comment.created_at }}</small>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="no-comments">Нет комментариев</li>
+            {% endfor %}
+        </ul>
+
+        <div class="comment-form">
+            <form method="post">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <button type="submit" class="submit-comment-button">Отправить</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        body {
+            background-color: #171717;
+            color: #eeeeee;
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Контейнер для поста */
+        .post-container {
+            width: 70%;
+            margin: 5% auto;
+            padding: 20px;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .post-title {
+            font-size: 36px;
+            color: #6d569e;
+            margin-bottom: 20px;
+        }
+
+        .post-content {
+            font-size: 18px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .post-image img {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .post-meta {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 10px;
+        }
+
+        .author-link, .action-link {
+            color: #6d569e;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .author-link:hover, .action-link:hover {
+            color: #9e7be9;
+            text-decoration: underline;
+        }
+
+        .comments-container {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .comments-title {
+            font-size: 28px;
+            color: #6d569e;
+            margin-bottom: 20px;
+        }
+
+        .comments-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .comment-item {
+            background-color: #333;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .comment-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .comment-content {
+            font-size: 16px;
+            color: #ddd;
+        }
+
+        .comment-author {
+            color: #6d569e;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .comment-author:hover {
+            color: #9e7be9;
+        }
+
+        .comment-meta {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .no-comments {
+            font-size: 16px;
+            color: #aaa;
+        }
+
+        .comment-form {
+            margin-top: 30px;
+        }
+
+        .submit-comment-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #6d569e;
+            color: #171717;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-comment-button:hover {
+            background-color: #9e7be9;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .post-container {
+                width: 90%;
+                margin: 5% auto;
+            }
+
+            .post-title {
+                font-size: 28px;
+            }
+
+            .post-content {
+                font-size: 16px;
+            }
+
+            .comments-container {
+                margin-top: 30px;
+            }
+
+            .comments-title {
+                font-size: 24px;
+            }
+
+            .comment-item {
+                padding: 10px;
+            }
+
+            .comment-content {
+                font-size: 14px;
+            }
+
+            .submit-comment-button {
+                font-size: 16px;
+            }
+        }
+    </style>
+{% endblock %}

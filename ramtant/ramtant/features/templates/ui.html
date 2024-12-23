@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    {% block headp %}{% endblock %}
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/ui.css' %}" />
+    <style>
+        body {
+            background-color: #171717;
+            color: #eeeeee;
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        a {
+            color: #eeeeee;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            text-decoration-color: #6d569e;
+            text-decoration-thickness: 4px;
+        }
+
+        a:active {
+            text-decoration: none;
+            color: #6d569e;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+        }
+
+        header {
+            background-color: #121212;
+            padding: 10px 0;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .menu a {
+            font-size: 18px;
+            margin: 0 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu a:hover {
+            background-color: #333;
+        }
+
+        .p1 {
+            display: flex;
+            gap: 20px;
+        }
+
+        .p2 {
+            display: flex;
+            gap: 15px;
+        }
+
+        .quit-button {
+            font-size: 21px;
+            font-family: "JetBrains Mono", serif;
+            background: #171717;
+            color: #eeeeee;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            position: relative;
+            right: 0;
+            margin-right: 5%;
+            margin-top: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: background-color 0.3s ease;
+        }
+
+        .quit-button:hover {
+            background-color: #6d569e;
+            color: #171717;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        .a1 {
+            color: #6d569e;
+        }
+
+        .a1:hover {
+            text-decoration: none;
+        }
+
+        /* Стили для мобильных устройств */
+        @media (max-width: 768px) {
+            .menu {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .p1 {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .p2 {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="menu container">
+            <div class="p1">
+                <a href="/" class="a1">Главная</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'my_profile' %}">Профиль</a>
+                    <a href="{% url 'post_create' %}">Написать статью</a>
+                </div>
+                <div class="p2">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="quit-button">Выход</button>
+                    </form>
+                </div>
+            {% else %}
+                </div>
+                <div class="p2">
+                    <a href="{% url 'register' %}">Зарегистрироваться</a>
+                    <a href="{% url 'login' %}">Войти</a>
+                </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

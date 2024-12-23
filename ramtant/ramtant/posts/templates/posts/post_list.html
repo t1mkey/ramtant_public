@@ -1,0 +1,172 @@
+{% extends "ui.html" %}
+
+{% block title %}ramtant - Статьи{% endblock %}
+
+{% block headp %}
+    {% if user.is_authenticated == False %}
+        <meta http-equiv="refresh" content="0;URL=/"/>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="search-container">
+        <form action="{% url 'post_search' %}" method="post" class="search-form">
+            {% csrf_token %}
+            <input type="text" name="search_post_field" class="search-input" placeholder="Поиск по статьям..." />
+            <button type="submit" class="search-button">Найти</button>
+        </form>
+    </div>
+
+    <div class="post-list">
+        <ol>
+            {% for post in posts.0 %}
+                <li class="post-item">
+                    <h2 class="post-title">{{ post.title }}</h2>
+                    <small class="post-meta">
+                        <a href="{% url 'profile' username=post.author.user.username %}" class="author-link">{{ post.author }}</a> | 
+                        {{ post.created_at }} | 
+                        <a href="{% url 'post_detail' post_id=post.id %}" class="read-more">Подробнее</a>
+                    </small>
+                    <p class="post-content">{{ post.content }}</p>
+                    {% if post.img %}
+                        <div class="post-image">
+                            <img src="{{ post.img.url }}" alt="{{ post.title }}" />
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #171717;
+            color: #eeeeee;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Стили для поиска */
+        .search-container {
+            padding: 2% 5%;
+        }
+
+        .search-form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-input {
+            font-size: 18px;
+            padding: 10px;
+            width: 70%;
+            background-color: #2c2c2c;
+            color: #eeeeee;
+            border: 1px solid #444;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            background-color: #333;
+            border-color: #6d569e;
+        }
+
+        .search-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #6d569e;
+            color: #171717;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: #9e7be9;
+        }
+
+        .post-list {
+            padding: 3% 5%;
+        }
+
+        .post-item {
+            background-color: #2c2c2c;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .post-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .post-title {
+            font-size: 24px;
+            color: #6d569e;
+            margin-bottom: 10px;
+        }
+
+        .post-meta {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .author-link, .read-more {
+            color: #6d569e;
+            transition: color 0.3s ease;
+        }
+
+        .author-link:hover, .read-more:hover {
+            color: #9e7be9;
+            text-decoration: underline;
+        }
+
+        .post-content {
+            font-size: 16px;
+            margin: 15px 0;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .post-image img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .post-item {
+                padding: 10px;
+            }
+
+            .post-title {
+                font-size: 20px;
+            }
+
+            .post-content {
+                font-size: 14px;
+            }
+        }
+    </style>
+{% endblock %}

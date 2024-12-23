@@ -1,0 +1,87 @@
+{% extends "ui.html" %}
+
+{% block title %}ramtant - вход{% endblock %}
+
+{% block headp %}
+    {% if user.is_authenticated %}
+        <meta http-equiv="refresh" content="0;URL=/"/>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h2>Вход в систему</h2>
+        {% if form.errors %}
+            <p class="error-message">Логин или пароль введены неверно</p>
+        {% endif %}
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form }}
+            </div>
+            <button type="submit" class="btn-submit">Войти</button>
+        </form>
+    </div>
+
+    <style>
+        .form-container {
+            width: 80%;
+            margin: 5% auto;
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            color: #eeeeee;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #6d569e;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #171717;
+            border: 1px solid #444;
+            color: #eeeeee;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #6d569e;
+            color: #ffffff;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #9e7be9;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                width: 90%;
+            }
+        }
+    </style>
+{% endblock %}
